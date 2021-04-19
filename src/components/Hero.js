@@ -20,6 +20,9 @@ const Hero = () => {
     {isAuthenticated && (
       <p> Hello {user.name}, you are in!</p>
     )}
+    {!isAuthenticated && (
+      <p>Please log in to begin!</p>
+    )}
 
   </div>
   );
