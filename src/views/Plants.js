@@ -45,13 +45,15 @@ const Plants = () => {
                                 currentPlant ?
                                 Object.values(currentPlant).map((plant) => (
                                     <div>
+                                        <hr />
                                         <h2>{plant.name}</h2>
                                         <p>Water {plant.gallons_per_week} gallon(s) weekly.</p>
                                         {
                                             plant.early_stage ? 
                                             <p>! - This plant needs extra water during early growth.</p> :
-                                            <div></div>
+                                            <div />
                                         }
+                                        <p>{plant.flavor}</p>
                                     </div>
                                 )) :
                                 <p>Select a Plant</p>
