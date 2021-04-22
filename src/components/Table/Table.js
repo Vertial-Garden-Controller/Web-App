@@ -4,18 +4,18 @@ import React from "react";
 import TableRow from "./TableRow";
 import TableHeadItem from "./TableHeadItem";
 
-const Table = ({ theadData, tbodyData, customClass }) => {
+const Table = ({ tHeadData, tBodyData, customClass }) => {
     return (
-        <table className={customClass}>
+        <table  className={"table"}>
             <thead>
                 <tr>
-                    {theadData.map((h) => {
+                    {tHeadData.map((h) => {
                         return <TableHeadItem key={h} item={h} />;
                     })}
                 </tr>
             </thead>
             <tbody>
-                {tbodyData.map((item) => {
+                {tBodyData.map((item) => {
                     return <TableRow key={item.id} data={item.items} />;
                 })}
             </tbody>
