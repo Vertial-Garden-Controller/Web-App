@@ -1,33 +1,32 @@
 import React, { Fragment, useState, useEffect } from "react";
 
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import Table from "../components/Table/Table";
 import axios from 'axios'
-
 
 export const Dashboard = () => {
     const [sensorData, setSensorData] = useState(0)
     const [tHeadData, setTHeadData] = useState(0)
     const [tBodyData, setTBodyData] = useState(0)
 
-    function buildTable() {
-        const tempBody = [];
-        for (var i = 0; i < tHeadData.length-1; i++) {
-            tempBody.push({
-                id: i,
-                items: [sensorData[i].garden_id,
-                sensorData[i].humidity,
-                sensorData[i].temperature,
-                sensorData[i].moisture,
-                sensorData[i].light,
-                sensorData[i].date_created],
-            });
-        }
-        setTBodyData(tempBody)
-    }
-
     useEffect(() => {
+        function buildTable() {
+            const tempBody = [];
+            for (var i = 0; i < tHeadData.length-1; i++) {
+                tempBody.push({
+                    id: i,
+                    items: [sensorData[i].garden_id,
+                    sensorData[i].humidity,
+                    sensorData[i].temperature,
+                    sensorData[i].moisture,
+                    sensorData[i].light,
+                    sensorData[i].date_created],
+                });
+            }
+            setTBodyData(tempBody)
+        }
+
         if(!sensorData) {
             async function fetchData() {
                 const response = await axios.get('http://localhost:5001/soil/?garden_id=1')
@@ -42,7 +41,7 @@ export const Dashboard = () => {
         if(tHeadData && sensorData && !tBodyData) {
             buildTable()
         }
-    }, [sensorData, tHeadData, tBodyData, buildTable])
+    }, [sensorData, tHeadData, tBodyData])
     
     return (
         <Fragment>
@@ -54,7 +53,7 @@ export const Dashboard = () => {
             {
                 (!sensorData || !tHeadData || !tBodyData) ?
                 <div>No Sensor Data is Currently Available</div> :
-                <Table tHeadData={tHeadData} tBodyData={tBodyData} />
+                <Table tHeadData={tHeadData} tBodyData={tBodyData}/>
             }
         </Fragment>
     );

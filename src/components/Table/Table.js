@@ -6,7 +6,7 @@ import TableHeadItem from "./TableHeadItem";
 
 const Table = ({ tHeadData, tBodyData, customClass }) => {
     return (
-        <table className={customClass}>
+        <table  className={"table"}>
             <thead>
                 <tr>
                     {tHeadData.map((h) => {
