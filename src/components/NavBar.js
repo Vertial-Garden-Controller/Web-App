@@ -79,6 +79,18 @@ const NavBar = () => {
                 <NavItem>
                   <NavLink
                     tag={RouterNavLink}
+                    to="/dashboard"
+                    exact
+                    activeClassName="router-link-exact-active"
+                  >
+                    Dashboard
+                  </NavLink>
+                </NavItem>
+              )}
+              {isAuthenticated && (
+                <NavItem>
+                  <NavLink
+                    tag={RouterNavLink}
                     to="/weather"
                     exact
                     activeClassName="router-link-exact-active"

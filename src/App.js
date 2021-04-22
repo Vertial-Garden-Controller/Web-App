@@ -9,6 +9,7 @@ import Home from "./views/Home";
 import Profile from "./views/Profile";
 import Plants from "./views/Plants";
 import Weather from "./views/Weather";
+import Dashboard from "./views/Dashboard";
 import ExternalApi from "./views/ExternalApi";
 import { useAuth0 } from "@auth0/auth0-react";
 import history from "./utils/history";
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/profile" component={Profile} />
             <Route path="/plants" component={Plants} />
             <Route path="/weather" component={Weather} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/external-api" component={ExternalApi} />
           </Switch>
         </Container>
