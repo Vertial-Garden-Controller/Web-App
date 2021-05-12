@@ -16,68 +16,60 @@
 
 */
 /*eslint-disable*/
-import React, { useState, useRef, useEffect } from "react";
-import { NavLink as RouterNavLink } from "react-router-dom";
-import { Nav, NavLink } from "reactstrap";
+import React, { useState, useRef, useEffect } from 'react'
+import { NavLink as RouterNavLink } from 'react-router-dom'
+import { Nav, NavLink } from 'reactstrap'
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
+import PerfectScrollbar from 'perfect-scrollbar'
 
 // import logo from "logo-white.svg";
 // import { useAuth0 } from "@auth0/auth0-react";
 
-var ps;
+var ps
 
 const Sidebar = () => {
-    // const {
-    //     user,
-    //     isAuthenticated,
-    //   } = useAuth0();
+  // const {
+  //     user,
+  //     isAuthenticated,
+  //   } = useAuth0();
 
-    return (
-        <div className="sidebar">
-          <div className="logo">
-            <a
-              href="#"
-              className="simple-text logo-mini"
-              target="_blank"
-            >
-              <div className="logo-img">
-                <img src="" alt="react-logo" />
-              </div>
-            </a>
-            <a
-              href="/"
-              className="simple-text logo-normal"
-              target="_blank"
-            >
-              Smart Irrigation
-            </a>
+  return (
+    <div className="sidebar">
+      <div className="logo">
+        <a href="#" className="simple-text logo-mini" target="_blank">
+          <div className="logo-img">
+            <img src="" alt="react-logo" />
           </div>
-          <div className="sidebar-wrapper" ref="sidebar">
-            <Nav>
-                <li>
-                    <NavLink
-                        tag={RouterNavLink}
-                        to="/"
-                        exact
-                        className="nav-link"
-                        activeClassName="router-link-exact-active"
-                    >
-                        Home
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink
-                        tag={RouterNavLink}
-                        to="/external-api"
-                        exact
-                        activeClassName="router-link-exact-active"
-                    >
-                        External API
-                    </NavLink>
-                </li>
-            </Nav>
-              {/* {this.props.routes.map((prop, key) => {
+        </a>
+        <a href="/" className="simple-text logo-normal" target="_blank">
+          Smart Irrigation
+        </a>
+      </div>
+      <div className="sidebar-wrapper" ref="sidebar">
+        <Nav>
+          <li>
+            <NavLink
+              tag={RouterNavLink}
+              to="/"
+              exact
+              className="nav-link"
+              activeClassName="router-link-exact-active"
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              tag={RouterNavLink}
+              to="/external-api"
+              exact
+              activeClassName="router-link-exact-active"
+            >
+              External API
+            </NavLink>
+          </li>
+        </Nav>
+        {/* {this.props.routes.map((prop, key) => {
                 if (prop.redirect) return null;
                 return (
                   <li
@@ -99,9 +91,9 @@ const Sidebar = () => {
                 );
               })}
             </Nav> */}
-          </div>
-        </div>
-      );
+      </div>
+    </div>
+  )
 }
 
-export default Sidebar;
+export default Sidebar

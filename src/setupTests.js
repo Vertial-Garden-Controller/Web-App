@@ -1,7 +1,7 @@
-import initFontAwesome from "./utils/initFontAwesome";
+import initFontAwesome from './utils/initFontAwesome'
 
 // Init fonts
-initFontAwesome();
+initFontAwesome()
 
 // Test mocks
-require("jest-fetch-mock").enableMocks();
+require('jest-fetch-mock').enableMocks()

@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react'
 
 const TableHeadItem = ({ item }) => {
-    return (
-        <td title={item}>
-            {item}
-        </td>
-    );
-};
+  return <td title={item}>{item}</td>
+}
 
-export default TableHeadItem;
+export default TableHeadItem

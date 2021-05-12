@@ -1,95 +1,92 @@
-import React, { useState } from "react";
-import { Button, Alert } from "reactstrap";
-import Highlight from "../components/Highlight";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import { getConfig } from "../config";
-import Loading from "../components/Loading";
+import React, { useState } from 'react'
+import { Button, Alert } from 'reactstrap'
+import Highlight from '../components/Highlight'
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
+import { getConfig } from '../config'
+import Loading from '../components/Loading'
 
 export const ExternalApiComponent = () => {
-  const { apiOrigin = "http://localhost:3001", audience } = getConfig();
+  const { apiOrigin = 'http://localhost:3001', audience } = getConfig()
 
   const [state, setState] = useState({
     showResult: false,
-    apiMessage: "",
+    apiMessage: '',
     error: null,
-  });
+  })
 
-  const {
-    getAccessTokenSilently,
-    loginWithPopup,
-    getAccessTokenWithPopup,
-  } = useAuth0();
+  const { getAccessTokenSilently, loginWithPopup, getAccessTokenWithPopup } =
+    useAuth0()
 
   const handleConsent = async () => {
     try {
-      await getAccessTokenWithPopup();
+      await getAccessTokenWithPopup()
       setState({
         ...state,
         error: null,
-      });
+      })
     } catch (error) {
       setState({
         ...state,
         error: error.error,
-      });
+      })
     }
 
-    await callApi();
-  };
+    await callApi()
+  }
 
   const handleLoginAgain = async () => {
     try {
-      await loginWithPopup();
+      await loginWithPopup()
       setState({
         ...state,
         error: null,
-      });
+      })
     } catch (error) {
       setState({
         ...state,
         error: error.error,
-      });
+      })
     }
 
-    await callApi();
-  };
+    await callApi()
+  }
 
   const callApi = async () => {
     try {
-      const token = await getAccessTokenSilently();
+      const token = await getAccessTokenSilently()
 
       const response = await fetch(`${apiOrigin}/api/external`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
+      })
 
-      const responseData = await response.json();
+      const responseData = await response.json()
 
       setState({
         ...state,
         showResult: true,
         apiMessage: responseData,
-      });
+      })
     } catch (error) {
       setState({
         ...state,
         error: error.error,
-      });
+      })
     }
-  };
+  }
 
   const handle = (e, fn) => {
-    e.preventDefault();
-    fn();
-  };
+    e.preventDefault()
+    fn()
+  }
 
   return (
     <>
       <div className="mb-5">
-        {state.error === "consent_required" && (
+        {state.error === 'consent_required' && (
           <Alert color="warning">
-            You need to{" "}
+            You need to{' '}
             <a
               href="#/"
               class="alert-link"
@@ -100,9 +97,9 @@ export const ExternalApiComponent = () => {
           </Alert>
         )}
 
-        {state.error === "login_required" && (
+        {state.error === 'login_required' && (
           <Alert color="warning">
-            You need to{" "}
+            You need to{' '}
             <a
               href="#/"
               class="alert-link"
@@ -132,21 +129,21 @@ export const ExternalApiComponent = () => {
               not have any configuration for <code>audience</code>, or it is
               using the default value of <code>YOUR_API_IDENTIFIER</code>. You
               might get this default value if you used the "Download Sample"
-              feature of{" "}
+              feature of{' '}
               <a href="https://auth0.com/docs/quickstart/spa/react">
                 the quickstart guide
               </a>
               , but have not set an API up in your Auth0 Tenant. You can find
-              out more information on{" "}
+              out more information on{' '}
               <a href="https://auth0.com/docs/api">setting up APIs</a> in the
               Auth0 Docs.
             </p>
             <p>
               The audience is the identifier of the API that you want to call
-              (see{" "}
+              (see{' '}
               <a href="https://auth0.com/docs/get-started/dashboard/tenant-settings#api-authorization-settings">
                 API Authorization Settings
-              </a>{" "}
+              </a>{' '}
               for more info).
             </p>
 
@@ -192,9 +189,9 @@ export const ExternalApiComponent = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
 export default withAuthenticationRequired(ExternalApiComponent, {
   onRedirecting: () => <Loading />,
-});
+})

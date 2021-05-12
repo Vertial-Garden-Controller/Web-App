@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { NavLink as RouterNavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from 'react'
+import { NavLink as RouterNavLink } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import {
   Collapse,
@@ -16,24 +16,19 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
+} from 'reactstrap'
 
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react'
 
 const NavBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const {
-    user,
-    isAuthenticated,
-    loginWithRedirect,
-    logout,
-  } = useAuth0();
-  const toggle = () => setIsOpen(!isOpen);
+  const [isOpen, setIsOpen] = useState(false)
+  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0()
+  const toggle = () => setIsOpen(!isOpen)
 
   const logoutWithRedirect = () =>
     logout({
       returnTo: window.location.origin,
-    });
+    })
 
   return (
     <div className="nav-container">
@@ -200,7 +195,7 @@ const NavBar = () => {
         </Container>
       </Navbar>
     </div>
-  );
-};
+  )
+}
 
-export default NavBar;
+export default NavBar

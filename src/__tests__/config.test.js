@@ -3,42 +3,42 @@ const mockConfig = (config) => {
   // on a per-test basis. Jest does not return mock objects
   // for these types of static file modules.
   jest.doMock(
-    "../auth_config.json",
+    '../auth_config.json',
     () => ({
-      domain: "test-domain.com",
-      clientId: "123",
+      domain: 'test-domain.com',
+      clientId: '123',
       ...config,
     }),
-    { virtual: true }
-  );
-};
+    { virtual: true },
+  )
+}
 
-describe("The config module", () => {
+describe('The config module', () => {
   afterEach(() => {
-    jest.resetModules();
-  });
+    jest.resetModules()
+  })
 
-  it("should omit the audience if not in the config json", () => {
-    mockConfig();
+  it('should omit the audience if not in the config json', () => {
+    mockConfig()
 
-    const { getConfig } = require("../config");
+    const { getConfig } = require('../config')
 
-    expect(getConfig().audience).not.toBeDefined();
-  });
+    expect(getConfig().audience).not.toBeDefined()
+  })
 
-  it("should omit the audience if left at a default value", () => {
-    mockConfig({ audience: "YOUR_API_IDENTIFIER" });
+  it('should omit the audience if left at a default value', () => {
+    mockConfig({ audience: 'YOUR_API_IDENTIFIER' })
 
-    const { getConfig } = require("../config");
+    const { getConfig } = require('../config')
 
-    expect(getConfig().audience).not.toBeDefined();
-  });
+    expect(getConfig().audience).not.toBeDefined()
+  })
 
-  it("should return the audience if specified", () => {
-    mockConfig({ audience: "test-api" });
+  it('should return the audience if specified', () => {
+    mockConfig({ audience: 'test-api' })
 
-    const { getConfig } = require("../config");
+    const { getConfig } = require('../config')
 
-    expect(getConfig().audience).toEqual("test-api");
-  });
-});
+    expect(getConfig().audience).toEqual('test-api')
+  })
+})

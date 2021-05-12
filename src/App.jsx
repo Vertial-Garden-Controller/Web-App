@@ -1,35 +1,35 @@
-import React from "react";
-import { Router, Route, Switch } from "react-router-dom";
-import { Container } from "reactstrap";
+import React from 'react'
+import { Router, Route, Switch } from 'react-router-dom'
+import { Container } from 'reactstrap'
 
-import Loading from "./components/Loading";
-import NavBar from "./components/NavBar";
+import Loading from './components/Loading'
+import NavBar from './components/NavBar'
 //import Sidebar from "./components/Sidebar";
-import Home from "./views/Home";
-import Profile from "./views/Profile";
-import Plants from "./views/Plants";
-import Weather from "./views/Weather";
-import Dashboard from "./views/Dashboard";
-import ExternalApi from "./views/ExternalApi";
-import { useAuth0 } from "@auth0/auth0-react";
-import history from "./utils/history";
+import Home from './views/Home'
+import Profile from './views/Profile'
+import Plants from './views/Plants'
+import Weather from './views/Weather'
+import Dashboard from './views/Dashboard'
+import ExternalApi from './views/ExternalApi'
+import { useAuth0 } from '@auth0/auth0-react'
+import history from './utils/history'
 
 // styles
-import "./App.css";
+import './App.css'
 
 // fontawesome
-import initFontAwesome from "./utils/initFontAwesome";
-initFontAwesome();
+import initFontAwesome from './utils/initFontAwesome'
+initFontAwesome()
 
 const App = () => {
-  const { isLoading, error } = useAuth0();
+  const { isLoading, error } = useAuth0()
 
   if (error) {
-    return <div>Oops... {error.message}</div>;
+    return <div>Oops... {error.message}</div>
   }
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
@@ -48,7 +48,7 @@ const App = () => {
         </Container>
       </div>
     </Router>
-  );
-};
+  )
+}
 
-export default App;
+export default App
