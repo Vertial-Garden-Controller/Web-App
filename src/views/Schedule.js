@@ -7,6 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export const Schedule = () => {
     const [scheduleJSON, setScheduleJSON] = useState()
+
     const {
         user,
       } = useAuth0();
@@ -16,11 +17,33 @@ export const Schedule = () => {
             async function fetchData() {
                 const response = await axios.get(`http://localhost:5001/schedule/user/?email=${user.email}`)
                 setScheduleJSON(response.data.schedules)
-                console.log(response.data.schedules)
             }
             fetchData()
         }
     }, [scheduleJSON, user.email])
+
+    function buildDays(SQLString) {
+        const days = [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+        ]
+        const temp = SQLString
+                        .replace('(', '')
+                        .replace(')', '')
+                        .split(',')
+        let returnString = '| '
+        for (const key in temp) {
+            if (temp[key] === 't') {
+                returnString = returnString.concat(`${days[key]} | `)
+            }
+        }
+        return returnString
+    }
     
     return (
         <Fragment>
@@ -29,7 +52,20 @@ export const Schedule = () => {
                 !scheduleJSON ?
                 <div>No Schedule Data is Currently Available</div> :
                 <div>
-                    <p>{scheduleJSON[0].start_time}</p>
+                    {
+                        Object.values(scheduleJSON).map((schedule) => (
+                            <div>
+                                <hr />
+                                <h3>Schedule Id: {schedule.rule_id}</h3>
+                                <div>
+                                    <p>Start Time: {schedule.start_time}</p>
+                                    <p>End Time: {schedule.end_time}</p>
+                                    <p>Days Active: {buildDays(schedule.days)}</p>
+                                </div>
+                            </div>
+                            
+                        ))    
+                    }
                 </div>
             }
         </Fragment>
