@@ -19,6 +19,7 @@ import "./App.css";
 
 // fontawesome
 import initFontAwesome from "./utils/initFontAwesome";
+import Schedule from "./views/Schedule";
 initFontAwesome();
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/weather" component={Weather} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/external-api" component={ExternalApi} />
+            <Route path="/schedule" component={Schedule} />
           </Switch>
         </Container>
       </div>
