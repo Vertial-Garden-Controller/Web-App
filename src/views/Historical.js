@@ -5,6 +5,8 @@ import Loading from "../components/Loading";
 import axios from "axios";
 import Highcharts from "highcharts";
 
+// using Highcharts: https://www.highcharts.com/docs/chart-concepts/legend
+
 var colors = Highcharts.getOptions().colors;
 
 var data = {
