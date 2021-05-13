@@ -5,6 +5,7 @@ import Loading from '../components/Loading'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
 import TimePicker from 'react-time-picker'
+import { useHistory } from 'react-router-dom'
 
 export const AddSchedule = () => {
     const [ISA, setISA] = useState(undefined)
@@ -20,6 +21,8 @@ export const AddSchedule = () => {
         {id: 6, value: "Sunday", isChecked: false},
     ])
 
+    const history = useHistory()
+
     const updateFieldChanged = index => e => {
         let newArr = [...days]; // copying the old days array
         newArr[index].isChecked = !newArr[index].isChecked
@@ -29,6 +32,27 @@ export const AddSchedule = () => {
     // const {
     //     user,
     //   } = useAuth0()
+
+    const handleSubmit = async e => {
+        e.preventDefault()
+        const reqBody = {
+            start_time: startTime,
+            end_time: endTime,
+            garden_id: 1,
+            days: { 
+                mon: days[0].isChecked,
+                tue: days[1].isChecked,
+                wed: days[2].isChecked,
+                thu: days[3].isChecked,
+                fri: days[4].isChecked,
+                sat: days[5].isChecked,
+                sun: days[6].isChecked
+            }
+        }
+        const response = await axios.post('http://localhost:5001/schedule/', reqBody)
+        console.log(response.data)
+        history.push('/schedule')
+    }
 
     useEffect(() => {
         if(ISA === undefined) {
@@ -49,7 +73,11 @@ export const AddSchedule = () => {
             <h1>Create Schedule</h1>
             {
                 ISA ?
-                (<div>
+                (<form
+                    onSubmit={
+                        handleSubmit
+                    }
+                 >
                     <h5>Create a Schedule Rule!</h5>
                     <p>Start Time:</p>
                     <div style={{flex: 1}}>
@@ -82,7 +110,8 @@ export const AddSchedule = () => {
                         ))}
                     </ul>
                     </div>
-                </div>) :
+                    <input type="submit" value="Submit" />
+                </form>) :
                 // otherwise, display schedule information.
                 <div>
                     <p>Cannot add new schedule at this time.</p>
