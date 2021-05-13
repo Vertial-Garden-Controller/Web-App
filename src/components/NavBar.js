@@ -91,6 +91,18 @@ const NavBar = () => {
                 <NavItem>
                   <NavLink
                     tag={RouterNavLink}
+                    to="/schedule"
+                    exact
+                    activeClassName="router-link-exact-active"
+                  >
+                    Watering Schedule
+                  </NavLink>
+                </NavItem>
+              )}
+              {isAuthenticated && (
+                <NavItem>
+                  <NavLink
+                    tag={RouterNavLink}
                     to="/weather"
                     exact
                     activeClassName="router-link-exact-active"

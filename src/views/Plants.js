@@ -49,7 +49,7 @@ const Plants = () => {
                                         <h2>{plant.name}</h2>
                                         <p>Water {plant.gallons_per_week} gallon(s) weekly.</p>
                                         {
-                                            plant.early_stage ? 
+                                            plant.early_stage ?
                                             <p>! - This plant needs extra water during early growth.</p> :
                                             <div />
                                         }
@@ -57,13 +57,13 @@ const Plants = () => {
                                     </div>
                                 )) :
                                 <p>Select a Plant</p>
-                                
+
                             }
                         </div>
                         }
                     </div>
-                
-                
+
+
             }
         </Fragment>
     );
