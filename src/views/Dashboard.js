@@ -42,13 +42,13 @@ export const Dashboard = () => {
             buildTable()
         }
     }, [sensorData, tHeadData, tBodyData])
-    
+
     return (
         <Fragment>
             <h1>Dashboard</h1>
             <p className="lead">
                 {/* Implement input box for custom weather data */}
-                Showing the dashboard.                
+                Showing the dashboard.
             </p>
             {
                 (!sensorData || !tHeadData || !tBodyData) ?
