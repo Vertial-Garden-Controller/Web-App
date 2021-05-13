@@ -50,7 +50,6 @@ export const AddSchedule = () => {
             }
         }
         const response = await axios.post('http://localhost:5001/schedule/', reqBody)
-        console.log(response.data)
         history.push('/schedule')
     }
 
@@ -110,6 +109,13 @@ export const AddSchedule = () => {
                         ))}
                     </ul>
                     </div>
+                    <button
+                        onClick={() => {
+                            history.push('/schedule')
+                        }}
+                    >
+                        Back
+                    </button>
                     <input type="submit" value="Submit" />
                 </form>) :
                 // otherwise, display schedule information.

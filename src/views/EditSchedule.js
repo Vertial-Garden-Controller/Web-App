@@ -29,14 +29,21 @@ export const EditSchedule = () => {
     const history = useHistory()
 
     useEffect(() => {
+        const updateFieldnoEvent = index => {
+            let newArr = [...days]; // copying the old days array
+            newArr[index].isChecked = !newArr[index].isChecked
+            setDays(newArr);
+        }
+
         if(currentSchedule === undefined) {
             async function fetchData() {
-                const response = await axios.get(`http://localhost:5001/schedule/?schedule_id=${id}`)
+                const response = await axios.get(
+                    `http://localhost:5001/schedule/?schedule_id=${id}`
+                )
                 if(response.data.schedule.email !== user.email) {
                     history.push('/')
                 } else {
                     setCurrentSchedule(response.data.schedule)
-                    console.log(response.data.schedule.start_time)
                     setStartTime(response.data.schedule.start_time)
                     setEndTime(response.data.schedule.end_time)
                     const tempArray = response.data.schedule.days
@@ -45,7 +52,6 @@ export const EditSchedule = () => {
                         .split(',')
                     for (const key in tempArray) {
                         if(tempArray[key] === 't') {
-                            console.log(key)
                             updateFieldnoEvent(key)
                         }
                     }
@@ -53,15 +59,9 @@ export const EditSchedule = () => {
             }
             fetchData()
         }
-    }, [currentSchedule, history, id, user.email])
+    }, [currentSchedule, history, id, user.email, days])
 
     const updateFieldChanged = index => e => {
-        let newArr = [...days]; // copying the old days array
-        newArr[index].isChecked = !newArr[index].isChecked
-        setDays(newArr);
-    }
-
-    const updateFieldnoEvent = index => {
         let newArr = [...days]; // copying the old days array
         newArr[index].isChecked = !newArr[index].isChecked
         setDays(newArr);
@@ -72,7 +72,7 @@ export const EditSchedule = () => {
         const reqBody = {
             start_time: startTime,
             end_time: endTime,
-            garden_id: 1,
+            email: user.email,
             days: { 
                 mon: days[0].isChecked,
                 tue: days[1].isChecked,
@@ -83,15 +83,19 @@ export const EditSchedule = () => {
                 sun: days[6].isChecked
             }
         }
-        const response = await axios.post('http://localhost:5001/schedule/', reqBody)
-        console.log(response.data)
+        const response = await axios.put(
+            `http://localhost:5001/schedule/?schedule_id=${id}`,
+            reqBody
+        )
         history.push('/schedule')
     }
 
     useEffect(() => {
         if(ISA === undefined) {
             async function fetchData() {
-                const response = await axios.get(`http://localhost:5001/status`)
+                const response = await axios.get(
+                    `http://localhost:5001/status`
+                )
                 if(response && response.status === 200) {
                     setISA(1)
                 } else {
@@ -144,6 +148,13 @@ export const EditSchedule = () => {
                         ))}
                     </ul>
                     </div>
+                    <button
+                        onClick={() => {
+                            history.push('/schedule')
+                        }}
+                    >
+                        Back
+                    </button>
                     <input type="submit" value="Submit" />
                 </form>) :
                 // otherwise, display schedule information.
