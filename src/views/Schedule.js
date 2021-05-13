@@ -5,10 +5,13 @@ import Loading from '../components/Loading'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
 import { NavLink } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 export const Schedule = () => {
     // Object containing existing schedule information for user by email
     const [scheduleJSON, setScheduleJSON] = useState(undefined)
+
+    const history = useHistory()
 
     const {
         user,
@@ -38,6 +41,11 @@ export const Schedule = () => {
             `)
         }
         setScheduleJSON(undefined)
+    }
+
+    const editSchedule = async e => {
+        e.preventDefault()
+        history.push(`schedule/edit/${e.target.id}`)
     }
 
     function buildDays(SQLString) {
@@ -95,6 +103,12 @@ export const Schedule = () => {
                                         onClick={handleClick}
                                     >
                                         Delete
+                                    </button>
+                                    <button
+                                        id={schedule.rule_id}
+                                        onClick={editSchedule}
+                                    >
+                                        Edit
                                     </button>
                                 </div>
                             ))}

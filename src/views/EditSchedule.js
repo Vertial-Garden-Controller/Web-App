@@ -6,8 +6,10 @@ import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
 import TimePicker from 'react-time-picker'
 import { useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
-export const AddSchedule = () => {
+export const EditSchedule = () => {
+    const [currentSchedule, setCurrentSchedule] = useState(undefined)
     const [ISA, setISA] = useState(undefined)
     const [startTime, setStartTime] = useState('10:00')
     const [endTime, setEndTime] = useState('14:00')
@@ -20,14 +22,46 @@ export const AddSchedule = () => {
         {id: 5, value: "Saturday", isChecked: false},
         {id: 6, value: "Sunday", isChecked: false},
     ])
-
+    let { id } = useParams()
     const {
         user,
-      } = useAuth0()
-
+    } = useAuth0()
     const history = useHistory()
 
+    useEffect(() => {
+        if(currentSchedule === undefined) {
+            async function fetchData() {
+                const response = await axios.get(`http://localhost:5001/schedule/?schedule_id=${id}`)
+                if(response.data.schedule.email !== user.email) {
+                    history.push('/')
+                } else {
+                    setCurrentSchedule(response.data.schedule)
+                    console.log(response.data.schedule.start_time)
+                    setStartTime(response.data.schedule.start_time)
+                    setEndTime(response.data.schedule.end_time)
+                    const tempArray = response.data.schedule.days
+                        .replace('(', '')
+                        .replace(')', '')
+                        .split(',')
+                    for (const key in tempArray) {
+                        if(tempArray[key] === 't') {
+                            console.log(key)
+                            updateFieldnoEvent(key)
+                        }
+                    }
+                }
+            }
+            fetchData()
+        }
+    }, [currentSchedule, history, id, user.email])
+
     const updateFieldChanged = index => e => {
+        let newArr = [...days]; // copying the old days array
+        newArr[index].isChecked = !newArr[index].isChecked
+        setDays(newArr);
+    }
+
+    const updateFieldnoEvent = index => {
         let newArr = [...days]; // copying the old days array
         newArr[index].isChecked = !newArr[index].isChecked
         setDays(newArr);
@@ -38,7 +72,7 @@ export const AddSchedule = () => {
         const reqBody = {
             start_time: startTime,
             end_time: endTime,
-            email: user.email,
+            garden_id: 1,
             days: { 
                 mon: days[0].isChecked,
                 tue: days[1].isChecked,
@@ -78,7 +112,7 @@ export const AddSchedule = () => {
                         handleSubmit
                     }
                  >
-                    <h5>Create a Schedule Rule!</h5>
+                    <h5>Edit a Schedule Rule!</h5>
                     <p>Start Time:</p>
                     <div style={{flex: 1}}>
                         <TimePicker
@@ -121,6 +155,6 @@ export const AddSchedule = () => {
     )
 }
 
-export default withAuthenticationRequired(AddSchedule, {
+export default withAuthenticationRequired(EditSchedule, {
     onRedirecting: () => <Loading />,
   })

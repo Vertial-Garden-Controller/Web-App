@@ -21,6 +21,7 @@ import "./App.css";
 import initFontAwesome from "./utils/initFontAwesome";
 import Schedule from "./views/Schedule";
 import CreateSchedule from "./views/CreateSchedule";
+import EditSchedule from "./views/EditSchedule";
 initFontAwesome();
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/external-api" component={ExternalApi} />
             <Route path="/schedule/create" component={CreateSchedule} />
+            <Route path="/schedule/edit/:id" component={EditSchedule} />
             <Route path="/schedule" component={Schedule} />
           </Switch>
         </Container>
