@@ -6,6 +6,8 @@ import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
 import { NavLink } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
+import { exportCSV } from '../utils/exportCSV'
+import FileSaver from 'file-saver'
 
 export const Schedule = () => {
     // Object containing existing schedule information for user by email
@@ -88,10 +90,32 @@ export const Schedule = () => {
                         className="btn btn-primary">
                             Click Here to Add a New Schedule
                         </NavLink>
+                        <hr />
+                        <button
+                            onClick={() => {
+                                let tempObj = scheduleJSON
+                                for (const key in tempObj) {
+                                    delete tempObj[key].date_created
+                                    delete tempObj[key].last_modified
+                                    delete tempObj[key].email
+                                }
+                                console.log(tempObj)
+                                const csv = exportCSV(tempObj)
+
+                                const blob = new Blob(
+                                    [csv],
+                                    {type: "text/plain;charset=utf-8"},
+                                )
+                                const exportDate = new Date(Date.now())
+                                FileSaver.saveAs(blob, `Schedule_Export_${exportDate.toUTCString()}.csv`)
+                            }}
+                        >
+                            Export All Schedule Data
+                        </button>
+                        <hr />
                         <div>
                             {Object.values(scheduleJSON).map((schedule) => (
                                 <div>
-                                    <hr />
                                     <h3>Schedule Id: {schedule.rule_id}</h3>
                                     <div>
                                         <p>Start Time: {schedule.start_time}</p>
@@ -110,6 +134,7 @@ export const Schedule = () => {
                                     >
                                         Edit
                                     </button>
+                                    <hr />
                                 </div>
                             ))}
                         </div>

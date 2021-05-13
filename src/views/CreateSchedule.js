@@ -50,7 +50,11 @@ export const AddSchedule = () => {
             }
         }
         const response = await axios.post('http://localhost:5001/schedule/', reqBody)
-        history.push('/schedule')
+        if(response.data.error) {
+            alert(response.data.error)
+        } else {
+            history.push('/schedule')
+        }
     }
 
     useEffect(() => {

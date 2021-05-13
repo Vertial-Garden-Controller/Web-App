@@ -87,7 +87,11 @@ export const EditSchedule = () => {
             `http://localhost:5001/schedule/?schedule_id=${id}`,
             reqBody
         )
-        history.push('/schedule')
+        if(response.data.error) {
+            alert(`Error: ${response.data.error}`)
+        } else {
+            history.push('/schedule')
+        }
     }
 
     useEffect(() => {
