@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 import { exportCSV } from '../utils/exportCSV'
 import FileSaver from 'file-saver'
+import { checkAndAddUser } from '../utils/addUser'
 
 export const Schedule = () => {
     // Object containing existing schedule information for user by email
@@ -18,6 +19,12 @@ export const Schedule = () => {
     const {
         user,
       } = useAuth0()
+
+    useEffect(() => {
+        if(user.email) {
+            checkAndAddUser(user)
+        }
+    }, [user])
 
     useEffect(() => {
         if(scheduleJSON === undefined) {
