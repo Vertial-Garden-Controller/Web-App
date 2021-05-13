@@ -25,6 +25,21 @@ export const Schedule = () => {
         }
     }, [scheduleJSON, user.email])
 
+    const handleClick = async e => {
+        e.preventDefault()
+        const response = await axios
+            .delete(
+                `http://localhost:5001/schedule/?schedule_id=${e.target.id}`,
+                { crossDomain: true }
+            )
+        if(response.status !== 200) {
+            alert(`Error: ${response.data.error}
+            Detail: ${response.data.detail}
+            `)
+        }
+        setScheduleJSON(undefined)
+    }
+
     function buildDays(SQLString) {
         const days = [
             'Monday',
@@ -75,8 +90,13 @@ export const Schedule = () => {
                                         <p>End Time: {schedule.end_time}</p>
                                         <p>Days Active: {buildDays(schedule.days)}</p>
                                     </div>
+                                    <button
+                                        id={schedule.rule_id}
+                                        onClick={handleClick}
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
-                                
                             ))}
                         </div>
                     </div>) :
