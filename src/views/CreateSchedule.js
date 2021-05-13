@@ -21,6 +21,10 @@ export const AddSchedule = () => {
         {id: 6, value: "Sunday", isChecked: false},
     ])
 
+    const {
+        user,
+      } = useAuth0()
+
     const history = useHistory()
 
     const updateFieldChanged = index => e => {
@@ -29,16 +33,12 @@ export const AddSchedule = () => {
         setDays(newArr);
     }
 
-    // const {
-    //     user,
-    //   } = useAuth0()
-
     const handleSubmit = async e => {
         e.preventDefault()
         const reqBody = {
             start_time: startTime,
             end_time: endTime,
-            garden_id: 1,
+            email: user.email,
             days: { 
                 mon: days[0].isChecked,
                 tue: days[1].isChecked,
