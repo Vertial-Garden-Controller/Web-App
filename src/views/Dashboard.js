@@ -4,6 +4,7 @@ import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import Table from "../components/Table/Table";
 import axios from 'axios'
+import { checkAndAddUser } from "../utils/addUser";
 
 export const Dashboard = () => {
     const [sensorData, setSensorData] = useState(0)
@@ -13,6 +14,10 @@ export const Dashboard = () => {
     const {
         user,
       } = useAuth0()
+
+    useEffect(() => {
+        checkAndAddUser(user)
+    }, [user])
 
     useEffect(() => {
         function buildTable() {
@@ -39,7 +44,7 @@ export const Dashboard = () => {
         }
             fetchData()
         }
-        if(!tHeadData && sensorData) {
+        if(!tHeadData && sensorData && sensorData.length > 0) {
             setTHeadData(Object.keys(sensorData[0]))
         }
         if(tHeadData && sensorData && !tBodyData) {
