@@ -68,7 +68,7 @@ const Hero = () => {
   ) : (
     <div>
       <h1 className="mb-4">SMART IRRIGATION</h1>
-      <p>Hi {user.given_name}, welcome!</p>
+      <p>Hi {user.given_name ? user.given_name : user.email}, welcome!</p>
       <p>The current size of your garden is {gardenSize} square feet.</p>
       <button
         onClick={() => {
