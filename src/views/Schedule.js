@@ -74,6 +74,23 @@ export const Schedule = () => {
         // console.log(scheduleJSON)
     }
 
+    const toStandardTime = (time) => {
+        const parsedDate = new Date(
+            Date.parse(`2020-01-01T${time}`)
+        )
+        const hours = parsedDate.getHours()
+        const minutes = parsedDate.getMinutes()
+        // const seconds = 0
+
+        return hours <= 12
+        ? time + " AM"
+        : (
+            hours-12 + ":"
+            + ((minutes < 10)?"0":"") + minutes
+            + ":00 PM"
+        )
+    }
+
     useEffect(() => {
         if (scheduleJSON && scheduleJSON[0]){
             function addMinutes(date, minutes) {
@@ -86,7 +103,8 @@ export const Schedule = () => {
                 const goal = new Date((date1.getTime() + date2.getTime())/2);
                 console.log(dateToTimeString(goal))
                 console.log((goal.getTime()-date1.getTime())/(600000*10))
-                return (goal.getTime()-date1.getTime())/(600000*10)-.1
+                // return (goal.getTime()-date1.getTime())/(600000*10)-.1
+                return goal
             }
             function dateToTimeString(date) {
                 return ((date.getHours() < 10)?"0":"") + date.getHours() +":"+ ((date.getMinutes() < 10)?"0":"") + date.getMinutes() + ":00"
@@ -102,8 +120,10 @@ export const Schedule = () => {
                     let newEnd = subMinutes(endTime, rain)
                     // console.log(rainFinder(startTime, endTime))
                     if(newStart >= newEnd) {
-                        newStart = addMinutes(startTime, rainFinder(startTime, endTime))
-                        newEnd = subMinutes(endTime, rainFinder(startTime, endTime))
+                        // newStart = addMinutes(startTime, rainFinder(startTime, endTime))
+                        // newEnd = subMinutes(endTime, rainFinder(startTime, endTime))
+                        newStart = rainFinder(startTime, endTime)
+                        newEnd = rainFinder(startTime, endTime)
                     }
                     newArr = update(newArr, {
                         [key]: {
@@ -256,8 +276,8 @@ export const Schedule = () => {
                                         : ''
                                     }</h3>
                                     <div>
-                                        <p>Start Time: {schedule.start_time}</p>
-                                        <p>End Time: {schedule.end_time}</p>
+                                        <p>Start Time: {toStandardTime(schedule.start_time)}</p>
+                                        <p>End Time: {toStandardTime(schedule.end_time)}</p>
                                         <p>Days Active: {buildDays(schedule.days)}</p>
                                     </div>
                                     <button
