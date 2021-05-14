@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useAuth0 } from "@auth0/auth0-react";
 
 export const checkAndAddUser = async (user) => {
     await axios
@@ -14,6 +13,7 @@ export const checkAndAddUser = async (user) => {
                     lastname: user.family_name ? user.family_name : 'Member',
                     email: user.email,
                     password: '0Auth-user-no-pass',
+                    garden_size: 100,
                 }
                 await axios
                     .post(
