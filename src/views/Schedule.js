@@ -15,7 +15,7 @@ export const Schedule = () => {
     // Object containing existing schedule information for user by email
     const [scheduleJSON, setScheduleJSON] = useState(undefined)
     const [adjustSchedule, setAdjustSchedule] = useState(undefined)
-    const [rain, setRain] = useState(0)
+    const [rain, setRain] = useState(0.0)
 
     const history = useHistory()
 
@@ -77,14 +77,16 @@ export const Schedule = () => {
     useEffect(() => {
         if (scheduleJSON && scheduleJSON[0]){
             function addMinutes(date, minutes) {
-                return new Date(date.getTime() + minutes*60000*15);
+                return new Date(date.getTime() + minutes*60000*100);
             }
             function subMinutes(date, minutes) {
-                return new Date(date.getTime() - minutes*60000*15);
+                return new Date(date.getTime() - minutes*60000*100);
             }
             function rainFinder(date1, date2) {
                 const goal = new Date((date1.getTime() + date2.getTime())/2);
-                return (goal.getTime()-date1.getTime())/(60000*15)-1
+                console.log(dateToTimeString(goal))
+                console.log((goal.getTime()-date1.getTime())/(600000*10))
+                return (goal.getTime()-date1.getTime())/(600000*10)-.1
             }
             function dateToTimeString(date) {
                 return ((date.getHours() < 10)?"0":"") + date.getHours() +":"+ ((date.getMinutes() < 10)?"0":"") + date.getMinutes() + ":00"
@@ -123,6 +125,46 @@ export const Schedule = () => {
         }
     }, [rain])
 
+    const handleFormSubmit = async e => {
+        e.preventDefault()
+        console.log(adjustSchedule[0].days)
+        for (const schedule of adjustSchedule) {
+            if(schedule.start_time !== scheduleJSON.start_time) {
+                const temp = schedule.days
+                    .replace('(', '')
+                    .replace(')', '')
+                    .split(',')
+                let reqBody = {
+                    start_time: schedule.start_time,
+                    end_time: schedule.end_time,
+                    email: user.email,
+                    days: { 
+                        mon: temp[0],
+                        tue: temp[1],
+                        wed: temp[2],
+                        thu: temp[3],
+                        fri: temp[4],
+                        sat: temp[5],
+                        sun: temp[6]
+                    }
+                }
+
+                await axios
+                    .put(
+                        `http://localhost:5001/schedule/?schedule_id=${schedule.rule_id}`,
+                        reqBody
+                    )
+                    .catch((error) => {
+                        if(error.response) {
+                            alert(error.response.data.detail)
+                        }
+                    })
+            }
+        }
+        setScheduleJSON(undefined)
+        setRain(0.0)
+        setAdjustSchedule(undefined)
+    }
 
     function buildDays(SQLString) {
         const days = [
@@ -153,7 +195,7 @@ export const Schedule = () => {
         <Fragment>
             <h1>Watering Schedules</h1>
             {
-                adjustSchedule === undefined ?
+                adjustSchedule === undefined || scheduleJSON === undefined ?
                 // No connection to ISA
                 // Print error message to user
                 <p>No Schedule Data is Currently Available</p> :
@@ -170,10 +212,10 @@ export const Schedule = () => {
                         <button
                             onClick={() => {
                                 let tempObj = scheduleJSON
-                                for (const key in tempObj) {
-                                    delete tempObj[key].date_created
-                                    delete tempObj[key].last_modified
-                                    delete tempObj[key].email
+                                for (const schedule of tempObj) {
+                                    delete schedule.date_created
+                                    delete schedule.last_modified
+                                    delete schedule.email
                                 }
                                 const csv = exportCSV(tempObj)
 
@@ -188,22 +230,31 @@ export const Schedule = () => {
                             Export All Schedule Data
                         </button>
                         <hr />
+                        <form
+                            onSubmit={handleFormSubmit}
+                        >
                         <p>Estimated Rainfall Tomorrow (inch): </p>
                         <input
                             type="number"
                             name="estPrecip"
+                            min='0'
+                            step='0.1'
                             value={rain}
                             onChange={e => {
-                                if(e.target.value >= 0) {
-                                    setRain(e.target.value)
-                                }
+                                setRain(e.target.value)
                             }}
                         />
+                        <input type="submit"></input>
+                        </form>
                         <hr />
                         <div>
-                            {Object.values(adjustSchedule).map((schedule) => (
+                            {Object.values(adjustSchedule).map((schedule, index) => (
                                 <div>
-                                    <h3>Schedule Id: {schedule.rule_id}</h3>
+                                    <h3>Schedule Id: {schedule.rule_id} {
+                                        schedule.start_time !== scheduleJSON[index].start_time 
+                                        ? "*"
+                                        : ''
+                                    }</h3>
                                     <div>
                                         <p>Start Time: {schedule.start_time}</p>
                                         <p>End Time: {schedule.end_time}</p>
@@ -221,6 +272,14 @@ export const Schedule = () => {
                                     >
                                         Edit
                                     </button>
+                                    {
+                                        schedule.start_time !== scheduleJSON[index].start_time 
+                                        ? (<div>
+                                            <p></p>
+                                            <h6>* - Watering Schedule Shown is adjusted due to expected precipitation</h6>
+                                        </div>)
+                                        : <div></div>
+                                    }
                                     <hr />
                                 </div>
                             ))}

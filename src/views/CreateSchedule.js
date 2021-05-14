@@ -27,7 +27,7 @@ export const AddSchedule = () => {
 
     const history = useHistory()
 
-    const updateFieldChanged = index => {
+    const updateFieldChanged = index => e => {
         let newArr = [...days]; // copying the old days array
         newArr[index].isChecked = !newArr[index].isChecked
         setDays(newArr);
