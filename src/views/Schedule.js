@@ -13,6 +13,7 @@ import { checkAndAddUser } from '../utils/addUser'
 export const Schedule = () => {
     // Object containing existing schedule information for user by email
     const [scheduleJSON, setScheduleJSON] = useState(undefined)
+    const [rain, setRain] = useState(0)
 
     const history = useHistory()
 
@@ -29,9 +30,11 @@ export const Schedule = () => {
     useEffect(() => {
         if(scheduleJSON === undefined) {
             async function fetchData() {
-                const response = await axios.get(`http://localhost:5001/schedule/user/?email=${user.email}`)
+                const response = await axios
+                    .get(
+                        `http://localhost:5001/schedule/user/?email=${user.email}`
+                        )
                 setScheduleJSON(response.data.schedules)
-                // setScheduleJSON({})
             }
             fetchData()
         }
@@ -77,7 +80,9 @@ export const Schedule = () => {
                 returnString = returnString.concat(`${days[key]} | `)
             }
         }
-        return returnString
+        return returnString === '| '
+            ? '(none)'
+            : returnString
     }
     
     return (
@@ -118,6 +123,18 @@ export const Schedule = () => {
                         >
                             Export All Schedule Data
                         </button>
+                        <hr />
+                        <p>Estimated Rainfall Tomorrow (inch): </p>
+                        <input
+                            type="number"
+                            name="estPrecip"
+                            value={rain}
+                            onChange={e => {
+                                if(e.target.value >= 0) {
+                                    setRain(e.target.value)
+                                }
+                            }}
+                        />
                         <hr />
                         <div>
                             {Object.values(scheduleJSON).map((schedule) => (

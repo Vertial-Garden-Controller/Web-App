@@ -81,17 +81,17 @@ const Hero = () => {
         editToggle ? (<div>
           <p></p>
           <form onSubmit={handleFormSubmit}>
-            <label>
-              New Size (ft<sup>2</sup>):
-              <input
-                type="number"
-                name="name"
-                value={newGardenSize}
-                onChange={e => {
+            <p>New Size (ft<sup>2</sup>):</p>
+            <input
+              type="number"
+              name="name"
+              value={newGardenSize}
+              onChange={e => {
+                if(e.target.value >= 1) {
                   setNewGardenSize(e.target.value)
-                }}
+                }
+              }}
               />
-            </label>
             <input type="submit" value="Submit" />
           </form>
         </div>) :
