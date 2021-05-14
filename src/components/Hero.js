@@ -8,6 +8,8 @@ import { checkAndAddUser } from "../utils/addUser";
 const Hero = () => {
   const [gardenSize, setGardenSize] = useState()
   const [currentEmail, setCurrentEmail] = useState()
+  const [editToggle, setEditToggle] = useState(false)
+  const [newGardenSize, setNewGardenSize] = useState(100)
 
   const {
     user,
@@ -27,12 +29,30 @@ const Hero = () => {
         const response = await axios.get(
           `http://localhost:5001/user/email/?email=${currentEmail}`
         )
-        console.log(response.data)
         setGardenSize(response.data.user.garden_size)
       }
       fetchData()
     }
   }, [gardenSize, currentEmail])
+
+  const handleFormSubmit = async e => {
+    e.preventDefault()
+    if(!user) {
+      alert('Whoops! Something is broken...')
+    } else {
+      await axios
+        .put(
+          `http://localhost:5001/user/updateGarden/?email=${user.email}`,
+          { garden_size: newGardenSize }
+        )
+        .catch(error => {
+          if(error.response) {
+            alert(error.response.data.detail)
+          }
+        })
+    }
+    setGardenSize(undefined)
+  }
 
   return (
     !isAuthenticated ? (
@@ -49,7 +69,34 @@ const Hero = () => {
     <div>
       <h1 className="mb-4">SMART IRRIGATION</h1>
       <p>Hi {user.given_name}, welcome!</p>
-      <p>The current size of your garden is {gardenSize}</p>
+      <p>The current size of your garden is {gardenSize} square feet.</p>
+      <button
+        onClick={() => {
+          setEditToggle(!editToggle)
+        }}
+      >
+        Edit Garden Size
+      </button>
+      {
+        editToggle ? (<div>
+          <p></p>
+          <form onSubmit={handleFormSubmit}>
+            <label>
+              New Size (ft<sup>2</sup>):
+              <input
+                type="number"
+                name="name"
+                value={newGardenSize}
+                onChange={e => {
+                  setNewGardenSize(e.target.value)
+                }}
+              />
+            </label>
+            <input type="submit" value="Submit" />
+          </form>
+        </div>) :
+        <div></div>
+      }
     </div>
     )
   )

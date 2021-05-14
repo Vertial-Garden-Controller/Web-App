@@ -106,7 +106,6 @@ export const Schedule = () => {
                                     delete tempObj[key].last_modified
                                     delete tempObj[key].email
                                 }
-                                console.log(tempObj)
                                 const csv = exportCSV(tempObj)
 
                                 const blob = new Blob(
