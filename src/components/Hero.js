@@ -51,6 +51,7 @@ const Hero = () => {
           }
         })
     }
+    setEditToggle(false)
     setGardenSize(undefined)
   }
 

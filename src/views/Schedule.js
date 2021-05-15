@@ -15,7 +15,7 @@ export const Schedule = () => {
     // Object containing existing schedule information for user by email
     const [scheduleJSON, setScheduleJSON] = useState(undefined)
     const [adjustSchedule, setAdjustSchedule] = useState(undefined)
-    const [rain, setRain] = useState(0.0)
+    const [rain, setRain] = useState()
 
     const history = useHistory()
 
@@ -39,7 +39,11 @@ export const Schedule = () => {
                         `http://localhost:5001/schedule/user/?email=${user.email}`
                         )
                 setScheduleJSON(response.data.schedules)
-                setRain(response.data.precip)
+                setRain(
+                    response.data.precip === 0
+                    ? undefined
+                    : response.data.precip
+                    )
             }
             fetchData()
         }
@@ -49,7 +53,7 @@ export const Schedule = () => {
                 {}
             ))
         }
-    }, [adjustSchedule, scheduleJSON, user.email])
+    }, [adjustSchedule, scheduleJSON, user.email, rain])
 
     const handleClick = async e => {
         e.preventDefault()
@@ -240,14 +244,20 @@ export const Schedule = () => {
                             type="number"
                             name="estPrecip"
                             min='0'
-                            step='0.1'
+                            step='0.001'
+                            placeholder={"ex: 0.6, 1.013"}
                             value={rain}
                             onChange={e => {
+                                console.log(e.target)
                                 setRain(e.target.value)
                             }}
                         />
                         <input type="submit"></input>
                         </form>
+                        {/* <button onClick={() => {
+                            setRain(undefined)
+                        } 
+                        }>Reset</button> */}
                         <hr />
                         <div>
                             {Object.values(adjustSchedule).map((schedule, index) => (
