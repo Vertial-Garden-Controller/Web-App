@@ -30,13 +30,16 @@ export const Schedule = () => {
     }, [user])
 
     useEffect(() => {
-        if(scheduleJSON === undefined || adjustSchedule === undefined) {
+        if(scheduleJSON === undefined
+            || adjustSchedule === undefined
+            || rain === undefined) {
             async function fetchData() {
                 const response = await axios
                     .get(
                         `http://localhost:5001/schedule/user/?email=${user.email}`
                         )
                 setScheduleJSON(response.data.schedules)
+                setRain(response.data.precip)
             }
             fetchData()
         }
@@ -80,14 +83,15 @@ export const Schedule = () => {
         )
         const hours = parsedDate.getHours()
         const minutes = parsedDate.getMinutes()
-        // const seconds = 0
+        const seconds = parsedDate.getSeconds()
 
         return hours <= 12
         ? time + " AM"
         : (
             hours-12 + ":"
-            + ((minutes < 10)?"0":"") + minutes
-            + ":00 PM"
+            + ((minutes < 10)?"0":"") + minutes + ":"
+            + ((seconds < 10)?"0":"") + seconds
+            + " PM"
         )
     }
 
@@ -107,7 +111,11 @@ export const Schedule = () => {
                 return goal
             }
             function dateToTimeString(date) {
-                return ((date.getHours() < 10)?"0":"") + date.getHours() +":"+ ((date.getMinutes() < 10)?"0":"") + date.getMinutes() + ":00"
+                return (
+                    ((date.getHours() < 10)?"0":"") + date.getHours() +":"
+                    + ((date.getMinutes() < 10)?"0":"") + date.getMinutes() + ":"
+                    + ((date.getSeconds() < 10)?"0":"") + date.getSeconds()
+                )
             }
             const rainUpdate = async () => {
                 let newArr = update(scheduleJSON, {})
@@ -148,41 +156,15 @@ export const Schedule = () => {
     const handleFormSubmit = async e => {
         e.preventDefault()
         console.log(adjustSchedule[0].days)
-        for (const schedule of adjustSchedule) {
-            if(schedule.start_time !== scheduleJSON.start_time) {
-                const temp = schedule.days
-                    .replace('(', '')
-                    .replace(')', '')
-                    .split(',')
-                let reqBody = {
-                    start_time: schedule.start_time,
-                    end_time: schedule.end_time,
-                    email: user.email,
-                    days: { 
-                        mon: temp[0],
-                        tue: temp[1],
-                        wed: temp[2],
-                        thu: temp[3],
-                        fri: temp[4],
-                        sat: temp[5],
-                        sun: temp[6]
-                    }
+        await axios
+            .put(
+                `http://localhost:5001/user/precip/?email=${user.email}`,
+                {
+                    precip: rain
                 }
-
-                await axios
-                    .put(
-                        `http://localhost:5001/schedule/?schedule_id=${schedule.rule_id}`,
-                        reqBody
-                    )
-                    .catch((error) => {
-                        if(error.response) {
-                            alert(error.response.data.detail)
-                        }
-                    })
-            }
-        }
+            )
         setScheduleJSON(undefined)
-        setRain(0.0)
+        setRain(undefined)
         setAdjustSchedule(undefined)
     }
 
