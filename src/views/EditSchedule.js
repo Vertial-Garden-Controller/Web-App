@@ -11,8 +11,8 @@ import { useParams } from 'react-router-dom'
 export const EditSchedule = () => {
     const [currentSchedule, setCurrentSchedule] = useState(undefined)
     const [ISA, setISA] = useState(undefined)
-    const [startTime, setStartTime] = useState('10:00')
-    const [endTime, setEndTime] = useState('14:00')
+    const [startTime, setStartTime] = useState('14:00')
+    const [endTime, setEndTime] = useState('16:00')
     const [days, setDays] = useState([
         {id: 0, value: "Monday", isChecked: false},
         {id: 1, value: "Tuesday", isChecked: false},

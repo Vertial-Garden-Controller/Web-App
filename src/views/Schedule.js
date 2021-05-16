@@ -287,7 +287,7 @@ export const Schedule = () => {
                         <hr />
                         <button
                             onClick={() => {
-                                let tempObj = scheduleJSON
+                                let tempObj = adjustSchedule
                                 for (const schedule of tempObj) {
                                     delete schedule.date_created
                                     delete schedule.last_modified
