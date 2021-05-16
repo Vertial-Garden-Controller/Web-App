@@ -10,6 +10,16 @@ import { exportCSV } from '../utils/exportCSV'
 import FileSaver from 'file-saver'
 import { checkAndAddUser } from '../utils/addUser'
 import update from 'immutability-helper'
+//The calendar
+// import { Calendar, momentLocalizer } from 'react-big-calendar';
+// import moment from 'moment';
+// import 'react-big-calendar/lib/css/react-big-calendar.css';
+// //import events
+// import events from './events';
+// //localizer
+// const localizer = momentLocalizer(moment);
+
+import DisplayCalendar from '../components/DisplayCalendar'
 
 export const Schedule = () => {
     // Object containing existing schedule information for user by email
@@ -21,10 +31,10 @@ export const Schedule = () => {
 
     const history = useHistory()
 
+
     const {
         user,
       } = useAuth0()
-
     /**
      * Once the user object has loaded,
      * check that the user exists in db
@@ -80,8 +90,8 @@ export const Schedule = () => {
         if (scheduleJSON && scheduleJSON[0]){
             /**
              * adds number of minutes to provided date
-             * @param {Date} date 
-             * @param {number} minutes 
+             * @param {Date} date
+             * @param {number} minutes
              * @returns Date
              */
             function addMinutes(date, minutes) {
@@ -89,8 +99,8 @@ export const Schedule = () => {
             }
             /**
              * subtracts number of minutes to provided date
-             * @param {Date} date 
-             * @param {number} minutes 
+             * @param {Date} date
+             * @param {number} minutes
              * @returns Date
              */
             function subMinutes(date, minutes) {
@@ -98,9 +108,9 @@ export const Schedule = () => {
             }
             /**
              * returns the date that is the average between two dates
-             * @param {Date} date1 
-             * @param {Date} date2 
-             * @returns 
+             * @param {Date} date1
+             * @param {Date} date2
+             * @returns
              */
             function rainFinder(date1, date2) {
                 const goal = new Date((date1.getTime() + date2.getTime())/2);
@@ -109,7 +119,7 @@ export const Schedule = () => {
             /**
              * takes date object and returns format used for updating the
              * adjustSchedule object
-             * @param {Date} date 
+             * @param {Date} date
              * @returns string
              */
             function dateToTimeString(date) {
@@ -119,9 +129,19 @@ export const Schedule = () => {
                     + ((date.getSeconds() < 10)?"0":"") + date.getSeconds()
                 )
             }
+
+            function getDate(){
+
+            }
+
+            function getTime(){
+
+            }
+
+
             const rainUpdate = async () => {
                 let newArr = update(scheduleJSON, {})
-                
+
                 for (const key in Object.values(scheduleJSON)) {
                     const startTime = new Date(Date.parse(`2020-01-01T${scheduleJSON[key].start_time}`))
                     const endTime = new Date(Date.parse(`2020-01-01T${scheduleJSON[key].end_time}`))
@@ -146,12 +166,13 @@ export const Schedule = () => {
                 updateFieldChanged(newArr)
             }
 
+////
             if(rain !== undefined) {
                 rainUpdate()
             }
         }
     }, [rain, userRain])
-
+///useEffect end
     /**
      * schedule delete handler call API to delete
      * the schedule and trigger the reset flag
@@ -184,7 +205,7 @@ export const Schedule = () => {
     const editSchedule = async e => {
         e.preventDefault()
         history.push(`schedule/edit/${e.target.id}`)
-    }    
+    }
 
     /**
      * Jank function that is making react object states work
@@ -197,7 +218,7 @@ export const Schedule = () => {
 
     /**
      * Takes 24-hr time string and converts into a 12-hr string with AM / PM
-     * @param {string} time 
+     * @param {string} time
      * @returns string
      */
     const toStandardTime = (time) => {
@@ -239,7 +260,7 @@ export const Schedule = () => {
     /**
      * takes the horrible postgres array string and converts into
      * text to be printed on the screen for displaying active days.
-     * @param {string} SQLString 
+     * @param {string} SQLString
      * @returns string
      */
     function buildDays(SQLString) {
@@ -266,7 +287,7 @@ export const Schedule = () => {
             ? '(none)'
             : returnString
     }
-    
+
     return (
         <Fragment>
             <h1>Watering Schedules</h1>
@@ -287,12 +308,14 @@ export const Schedule = () => {
                         <hr />
                         <button
                             onClick={() => {
+
                                 let tempObj = scheduleJSON
                                 for (const schedule of tempObj) {
                                     delete schedule.date_created
                                     delete schedule.last_modified
                                     delete schedule.email
                                 }
+
                                 const csv = exportCSV(tempObj)
 
                                 const blob = new Blob(
@@ -329,7 +352,7 @@ export const Schedule = () => {
                             {Object.values(adjustSchedule).map((schedule, index) => (
                                 <div>
                                     <h3>Schedule Id: {schedule.rule_id} {
-                                        schedule.start_time !== scheduleJSON[index].start_time 
+                                        schedule.start_time !== scheduleJSON[index].start_time
                                         ? "*"
                                         : ''
                                     }</h3>
@@ -351,7 +374,7 @@ export const Schedule = () => {
                                         Edit
                                     </button>
                                     {
-                                        schedule.start_time !== scheduleJSON[index].start_time 
+                                        schedule.start_time !== scheduleJSON[index].start_time
                                         ? (<div>
                                             <p></p>
                                             <h6>* - Watering Schedule Shown is adjusted due to expected precipitation</h6>
@@ -359,6 +382,7 @@ export const Schedule = () => {
                                         : <div></div>
                                     }
                                     <hr />
+
                                 </div>
                             ))}
                         </div>
@@ -372,7 +396,26 @@ export const Schedule = () => {
                         </NavLink>
                     </div>)
                 )
+
+
+            //Display Calendar
+            // <div>
+            //   <Calendar
+            //     localizer={localizer}
+            //     events={events}
+            //      startAccessor="start"
+            //      endAccessor="end"
+            //      style={{ height: 500 }}
+            //      step={60}
+            //     showMultiDayTimes
+            //      defaultDate={new Date(2015, 3, 13, 7, 0, 0)}
+            //   />
+            // </div>
+
             }
+
+            <DisplayCalendar />
+
         </Fragment>
     )
 }
