@@ -22,15 +22,17 @@ export const Dashboard = () => {
     useEffect(() => {
         function buildTable() {
             const tempBody = [];
-            for (var i = 0; i < tHeadData.length-1; i++) {
+            for (const key in sensorData) {
                 tempBody.push({
-                    id: i,
-                    items: [sensorData[i].garden_id,
-                    sensorData[i].humidity,
-                    sensorData[i].temperature,
-                    sensorData[i].moisture,
-                    sensorData[i].light,
-                    sensorData[i].date_created],
+                    id: key,
+                    items: [
+                        sensorData[key].humidity,
+                        sensorData[key].temperature,
+                        sensorData[key].moisture,
+                        sensorData[key].light,
+                        sensorData[key].date_created,
+                        sensorData[key].email
+                    ],
                 });
             }
             setTBodyData(tempBody)
