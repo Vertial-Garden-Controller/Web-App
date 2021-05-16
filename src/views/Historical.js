@@ -4,140 +4,73 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import axios from "axios";
 import Highcharts from "highcharts";
+import { useAuth0 } from '@auth0/auth0-react'
+
 
 // using Highcharts: https://www.highcharts.com/docs/chart-concepts/legend
 
 var colors = Highcharts.getOptions().colors;
 
-var data = {
-  success: true,
-  sensor_data: [
-    {
-      garden_id: 1,
-      humidity: 4.98,
-      temperature: 58.98,
-      moisture: 18.09,
-      light: 14.11,
-      date_created: "2021-04-21T04:40:38.325Z",
-    },
-    {
-      garden_id: 1,
-      humidity: 77.6,
-      temperature: 2.37,
-      moisture: 70.65,
-      light: 63.8,
-      date_created: "2021-04-21T04:40:38.325Z",
-    },
-    {
-      garden_id: 1,
-      humidity: 74.86,
-      temperature: 32.1,
-      moisture: 11.14,
-      light: 26.05,
-      date_created: "2021-04-21T04:40:38.325Z",
-    },
-    {
-      garden_id: 1,
-      humidity: 34.76,
-      temperature: 87.39,
-      moisture: 70.62,
-      light: 88.82,
-      date_created: "2021-04-21T04:40:38.325Z",
-    },
-    {
-      garden_id: 1,
-      humidity: 97.69,
-      temperature: 78.86,
-      moisture: 59.26,
-      light: 6.16,
-      date_created: "2021-04-21T04:40:38.325Z",
-    },
-  ],
-};
-
 export const Historical = () => {
-  const [sensorData, setSensorData] = useState(data.sensor_data)
+  const [sensorData, setSensorData] = useState(undefined)
   const [dataSource, setDataSource] = useState([]);
+
+  const {
+      user,
+    } = useAuth0()
 
   const refMoisture = useRef(null);
   const refTemp = useRef(null);
   const refHumidity = useRef(null);
   const refLight = useRef(null);
 
-  // useEffect(() => {
-  //   function buildData() {
-  //     const tempBody = [
-  //       {
-  //         name: "Humidity",
-  //         data: [],
-  //       },
-  //       {
-  //         name: "Temperature",
-  //         data: [],
-  //       },
-  //       {
-  //         name: "Moisture",
-  //         data: [],
-  //       },
-  //       {
-  //         name: "Light",
-  //         data: [],
-  //       },
-  //     ];
-  //     for (var i = 0; i < data.sensor_data.length; i++) {
-  //       tempBody[0].data.push(sensorData[i].humidity);
-  //       tempBody[1].data.push(sensorData[i].temperature);
-  //       tempBody[2].data.push(sensorData[i].moisture);
-  //       tempBody[3].data.push(sensorData[i].light);
-  //     }
-  //     setDataSource(tempBody);
-  //   }
+  useEffect(() => {
+    async function fetchData() {
+      await axios
+        .get(
+          `http://localhost:5001/soil/?email=${user.email}`
+        )
+        .then((res) => {
+          setSensorData(res.data.sensor_data)
+        })
+        .catch((err) => {
+          if(err.response) {
+            alert(err.response.data.detail)
+          }
+        })
+    }
 
-  //   if (!sensorData) {
-  //     async function fetchData() {
-  //       const response = await axios.get(
-  //         "http://localhost:5001/soil/?garden_id=1"
-  //       );
-
-  //       setSensorData(Object.values(response.data.sensor_data));
-  //     }
-  //     fetchData();
-  //   }
-  //   if (!dataSource && sensorData) {
-  //     buildData();
-  //   }
-  // }, [sensorData]);
+    fetchData()
+  }, [user.email])
 
   useEffect(() => {
-    setTimeout(() => {
-      const tempBody = [
-        {
-          name: "Humidity",
-          data: [],
-        },
-        {
-          name: "Temperature",
-          data: [],
-        },
-        {
-          name: "Moisture",
-          data: [],
-        },
-        {
-          name: "Light",
-          data: [],
-        },
-      ];
-      for (var i = 0; i < data.sensor_data.length; i++) {
-        tempBody[0].data.push(sensorData[i].humidity);
-        tempBody[1].data.push(sensorData[i].temperature);
-        tempBody[2].data.push(sensorData[i].moisture);
-        tempBody[3].data.push(sensorData[i].light);
-      }
-      setDataSource(tempBody);
-      console.log("==datasource:",dataSource)
-    }, 2000);
-  }, []);
+    const tempBody = [
+      {
+        name: "Humidity",
+        data: [],
+      },
+      {
+        name: "Temperature",
+        data: [],
+      },
+      {
+        name: "Moisture",
+        data: [],
+      },
+      {
+        name: "Light",
+        data: [],
+      },
+    ];
+    for (const key in sensorData) {
+      tempBody[0].data.push(sensorData[key].humidity);
+      tempBody[1].data.push(sensorData[key].temperature);
+      tempBody[2].data.push(sensorData[key].moisture);
+      tempBody[3].data.push(sensorData[key].light);
+    }
+    setDataSource(tempBody);
+    console.log("==datasource:",dataSource)
+  }, [sensorData]);
 
   useEffect(() => {
     const chartMoisture = Highcharts.chart(refMoisture.current, {
@@ -159,7 +92,7 @@ export const Historical = () => {
       },
       yAxis: {
         title: {
-          text: "What are the units of moisture?",
+          text: "% water",
         }, // the title of the Y Axis
         accessibility: {
           description: "The y-axis title description"
@@ -203,7 +136,7 @@ export const Historical = () => {
       },
       yAxis: {
         title: {
-          text: "What are the units of humidity?",
+          text: "mg/L",
         }, // the title of the Y Axis
         accessibility: {
           description: "The y-axis title description"
@@ -244,7 +177,7 @@ export const Historical = () => {
       },
       yAxis: {
         title: {
-          text: "What are the units of light?",
+          text: "Lux",
         }, // the title of the Y Axis
         accessibility: {
           description: "The y-axis title description"
