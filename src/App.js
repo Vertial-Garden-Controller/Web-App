@@ -10,6 +10,7 @@ import Profile from "./views/Profile";
 import Plants from "./views/Plants";
 import Weather from "./views/Weather";
 import Dashboard from "./views/Dashboard";
+import Historical from "./views/Historical";
 import ExternalApi from "./views/ExternalApi";
 import { useAuth0 } from "@auth0/auth0-react";
 import history from "./utils/history";
@@ -19,6 +20,9 @@ import "./App.css";
 
 // fontawesome
 import initFontAwesome from "./utils/initFontAwesome";
+import Schedule from "./views/Schedule";
+import CreateSchedule from "./views/CreateSchedule";
+import EditSchedule from "./views/EditSchedule";
 initFontAwesome();
 
 const App = () => {
@@ -43,7 +47,11 @@ const App = () => {
             <Route path="/plants" component={Plants} />
             <Route path="/weather" component={Weather} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/history" component={Historical} />
             <Route path="/external-api" component={ExternalApi} />
+            <Route path="/schedule/create" component={CreateSchedule} />
+            <Route path="/schedule/edit/:id" component={EditSchedule} />
+            <Route path="/schedule" component={Schedule} />
           </Switch>
         </Container>
       </div>

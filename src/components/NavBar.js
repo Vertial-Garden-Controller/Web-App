@@ -63,7 +63,7 @@ const NavBar = () => {
                   Plants
                 </NavLink>
               </NavItem>
-              {isAuthenticated && (
+              {/* {isAuthenticated && (
                 <NavItem>
                   <NavLink
                     tag={RouterNavLink}
@@ -74,7 +74,7 @@ const NavBar = () => {
                     External API
                   </NavLink>
                 </NavItem>
-              )}
+              )} */}
               {isAuthenticated && (
                 <NavItem>
                   <NavLink
@@ -84,6 +84,30 @@ const NavBar = () => {
                     activeClassName="router-link-exact-active"
                   >
                     Dashboard
+                  </NavLink>
+                </NavItem>
+              )}
+              {isAuthenticated && (
+                <NavItem>
+                  <NavLink
+                    tag={RouterNavLink}
+                    to="/schedule"
+                    exact
+                    activeClassName="router-link-exact-active"
+                  >
+                    Scheduler
+                  </NavLink>
+                </NavItem>
+              )}
+              {isAuthenticated && (
+                <NavItem>
+                  <NavLink
+                    tag={RouterNavLink}
+                    to="/history"
+                    exact
+                    activeClassName="router-link-exact-active"
+                  >
+                    Historical Data
                   </NavLink>
                 </NavItem>
               )}
