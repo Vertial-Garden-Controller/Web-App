@@ -45,8 +45,14 @@ export const Historical = () => {
     fetchData()
   }, [user.email])
 
+  function readableDates(dateString) {
+    var x = new Date(Date.parse(dateString))
+    return (`${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()+1}`)
+  }
+
   useEffect(() => {
     var currDate = new Date(Date.now());
+    console.log("== currDate:", Date.parse(currDate))
     var start = new Date(Date.parse(currDate) - (apiQuery * 86400000))
     var startTime = (`${start.getFullYear()}-${start.getMonth()+1}-${start.getDate()}`)
     var endTime = (`${currDate.getFullYear()}-${currDate.getMonth()+1}-${currDate.getDate() + 1}`)
@@ -65,6 +71,7 @@ export const Historical = () => {
       {
         name: "Humidity",
         data: [],
+        dates: []
       },
       {
         name: "Temperature",
@@ -84,10 +91,13 @@ export const Historical = () => {
       tempBody[1].data.push(sensorData[key].temperature);
       tempBody[2].data.push(sensorData[key].moisture);
       tempBody[3].data.push(sensorData[key].light);
+      tempBody[0].dates.push(readableDates(sensorData[key].date_created))
     }
     setDataSource(tempBody);
     console.log("==datasource:",dataSource)
   }, [sensorData]);
+
+
 
   useEffect(() => {
     const chartMoisture = Highcharts.chart(refMoisture.current, {
@@ -105,7 +115,8 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
+          
       },
       yAxis: {
         title: {
@@ -149,7 +160,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
@@ -190,7 +201,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
@@ -231,7 +242,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
