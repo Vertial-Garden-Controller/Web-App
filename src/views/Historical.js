@@ -7,55 +7,59 @@ import Highcharts from "highcharts";
 
 // using Highcharts: https://www.highcharts.com/docs/chart-concepts/legend
 
+// 1 day is 86400000 millisecods
+// 7 days is 604800000 milliseconds
+// 1 month is 2592000000
+
 var colors = Highcharts.getOptions().colors;
 
 var data = {
   success: true,
   sensor_data: [
     {
-      garden_id: 1,
-      humidity: 4.98,
-      temperature: 58.98,
-      moisture: 18.09,
-      light: 14.11,
-      date_created: "2021-04-21T04:40:38.325Z",
+      "humidity": 4.98,
+      "temperature": 58.98,
+      "moisture": 18.09,
+      "light": 14.11,
+      "date_created": "2021-04-21T04:40:38.325Z",
+      "email": "jbarringer1999@gmail.com"
     },
     {
-      garden_id: 1,
-      humidity: 77.6,
-      temperature: 2.37,
-      moisture: 70.65,
-      light: 63.8,
-      date_created: "2021-04-21T04:40:38.325Z",
+        "humidity": 77.6,
+        "temperature": 2.37,
+        "moisture": 70.65,
+        "light": 63.8,
+        "date_created": "2021-04-03T04:40:38.325Z",
+        "email": "jbarringer1999@gmail.com"
     },
     {
-      garden_id: 1,
-      humidity: 74.86,
-      temperature: 32.1,
-      moisture: 11.14,
-      light: 26.05,
-      date_created: "2021-04-21T04:40:38.325Z",
+        "humidity": 74.86,
+        "temperature": 32.1,
+        "moisture": 11.14,
+        "light": 26.05,
+        "date_created": "2021-04-19T04:40:38.325Z",
+        "email": "jbarringer1999@gmail.com"
     },
     {
-      garden_id: 1,
-      humidity: 34.76,
-      temperature: 87.39,
-      moisture: 70.62,
-      light: 88.82,
-      date_created: "2021-04-21T04:40:38.325Z",
+        "humidity": 34.76,
+        "temperature": 87.39,
+        "moisture": 70.62,
+        "light": 88.82,
+        "date_created": "2021-04-18T04:40:38.325Z",
+        "email": "jbarringer1999@gmail.com"
     },
     {
-      garden_id: 1,
-      humidity: 97.69,
-      temperature: 78.86,
-      moisture: 59.26,
-      light: 6.16,
-      date_created: "2021-04-21T04:40:38.325Z",
+        "humidity": 97.69,
+        "temperature": 78.86,
+        "moisture": 59.26,
+        "light": 6.16,
+        "date_created": "2021-04-17T04:40:38.325Z",
+        "email": "jbarringer1999@gmail.com"
     },
   ],
 };
 
-export const Historical = () => {
+export const Historical = ({ query }) => {
   const [sensorData, setSensorData] = useState(data.sensor_data)
   const [dataSource, setDataSource] = useState([]);
 
@@ -63,6 +67,9 @@ export const Historical = () => {
   const refTemp = useRef(null);
   const refHumidity = useRef(null);
   const refLight = useRef(null);
+
+  
+
 
   // useEffect(() => {
   //   function buildData() {
@@ -159,7 +166,7 @@ export const Historical = () => {
       },
       yAxis: {
         title: {
-          text: "What are the units of moisture?",
+          text: "Moisture",
         }, // the title of the Y Axis
         accessibility: {
           description: "The y-axis title description"
@@ -203,7 +210,7 @@ export const Historical = () => {
       },
       yAxis: {
         title: {
-          text: "What are the units of humidity?",
+          text: "Relative Humidity (%)",
         }, // the title of the Y Axis
         accessibility: {
           description: "The y-axis title description"
@@ -244,7 +251,7 @@ export const Historical = () => {
       },
       yAxis: {
         title: {
-          text: "What are the units of light?",
+          text: "Lumens",
         }, // the title of the Y Axis
         accessibility: {
           description: "The y-axis title description"
@@ -320,13 +327,61 @@ export const Historical = () => {
     }
   }, [dataSource]);  
 
+  const [ inputQuery, setInputQuery ] = useState(query || "7");
+  const [ apiQuery, setApiQuery ] = useState("7");
+  // const [ startTime, setStartTime ] = useState();
+  // const [ endTime, setEndTime ] = useState();
+
+  // const currDate = new Date(Date.now());
+  // setEndTime(`${currDate.getFullYear()}-${currDate.getMonth()}-${currDate.getDate()}`)
+  // console.log("== current Date:", currDate.getDate())
+  // console.log("== current Month:", currDate.getMonth())
+  // console.log("== current Year:", currDate.getFullYear())
+
+  
+
+  // console.log("== query:", inputQuery);
+  // console.log("== start Date:", start.getDate())
+  // console.log("== start Month:", start.getMonth())
+  // console.log("== start Year:", start.getFullYear())
+
+
+  const email = "jbarringer1999@gmail.com"
+
+  useEffect(() => {
+    var currDate = new Date(Date.now());
+    var start = new Date(Date.parse(currDate) - (apiQuery * 86400000))
+    var startTime = (`${start.getFullYear()}-${start.getMonth()}-${start.getDate()}`)
+    var endTime = (`${currDate.getFullYear()}-${currDate.getMonth()}-${currDate.getDate() + 1}`)
+    console.log("==start Time:", startTime);
+    console.log("==end Time:", endTime);
+    // async function fetchData() {
+    //   const response = await axios.get(`http://localhost:5001/soil/?start_time=${startTime}&end_time=${endTime}&email=${user.email}`)
+    //   setSensorData(Object.values(response.data.sensor_data))
+    // }
+
+  }, [ apiQuery ]);
+
+  
+
   return (
     <Fragment>
       <h1>Historical Data</h1>
-      <p className="lead">
-        {/* Implement input box for custom weather data */}
-        Showing the history in graphs.
-      </p>
+      
+      <form onSubmit={(e) => {
+          e.preventDefault();
+          setApiQuery(inputQuery);
+      }}>
+        <div>
+          <input value={inputQuery} onChange={e => setInputQuery(e.target.value)} />
+          
+        </div>
+      </form>
+      
+      {/* <form onSubmit={handleSubmit}>
+        Showing the last <input type="text" name="nValue" value={nValue} /> days of data. <br />
+        <input type="button"  value="Submit" />
+      </form> */}
       {/* {
                 (!sensorData || !dataSource) ?
                 <div>No Sensor Data is Currently Available</div> :
