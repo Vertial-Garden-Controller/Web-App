@@ -52,7 +52,7 @@ const Hero = () => {
         })
     }
     setEditToggle(false)
-    setGardenSize(undefined)
+    setGardenSize(newGardenSize)
   }
 
   return (
