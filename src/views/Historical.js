@@ -14,6 +14,8 @@ var colors = Highcharts.getOptions().colors;
 export const Historical = () => {
   const [sensorData, setSensorData] = useState(undefined)
   const [dataSource, setDataSource] = useState([]);
+  const [ inputQuery, setInputQuery ] = useState("100");
+  const [ apiQuery, setApiQuery ] = useState("7");
 
   const {
       user,
@@ -42,6 +44,21 @@ export const Historical = () => {
 
     fetchData()
   }, [user.email])
+
+  useEffect(() => {
+    var currDate = new Date(Date.now());
+    var start = new Date(Date.parse(currDate) - (apiQuery * 86400000))
+    var startTime = (`${start.getFullYear()}-${start.getMonth()+1}-${start.getDate()}`)
+    var endTime = (`${currDate.getFullYear()}-${currDate.getMonth()+1}-${currDate.getDate() + 1}`)
+    console.log("==start Time:", startTime);
+    console.log("==end Time:", endTime);
+    async function fetchData() {
+      const response = await axios.get(`http://localhost:5001/soil/?start_time=${startTime}&end_time=${endTime}&email=${user.email}`)
+      console.log("== api call:", Object.values(response.data.sensor_data))
+      setSensorData(Object.values(response.data.sensor_data))
+    }
+    fetchData()
+  }, [ apiQuery ]);
 
   useEffect(() => {
     const tempBody = [
@@ -256,18 +273,15 @@ export const Historical = () => {
   return (
     <Fragment>
       <h1>Historical Data</h1>
-      <p className="lead">
-        {/* Implement input box for custom weather data */}
-        Showing the history in graphs.
-      </p>
-      {/* {
-                (!sensorData || !dataSource) ?
-                <div>No Sensor Data is Currently Available</div> :
-                <div ref={refMoisture} />
-                <div ref={refHumidity} />
-                <div ref={refLight} />
-                <div ref={refTemp} />
-            } */}
+      <form onSubmit={(e) => {
+          e.preventDefault();
+          setApiQuery(inputQuery);
+      }}>
+        <div>
+          Showing data for the last <input value={inputQuery} onChange={e => setInputQuery(e.target.value)} /> days.
+          
+        </div>
+      </form>      
       <div ref={refMoisture} />
       <div ref={refHumidity} />
       <div ref={refLight} />
