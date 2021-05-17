@@ -60,11 +60,17 @@ export const Historical = () => {
     fetchData()
   }, [ apiQuery ]);
 
+  function readableDates(dateString) {
+    var x = new Date(Date.parse(dateString))
+    return (`${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()+1}`)
+  }
+
   useEffect(() => {
     const tempBody = [
       {
         name: "Humidity",
         data: [],
+        dates: []
       },
       {
         name: "Temperature",
@@ -80,6 +86,7 @@ export const Historical = () => {
       },
     ];
     for (const key in sensorData) {
+      tempBody[0].dates.push(readableDates(sensorData[key].date_created))
       tempBody[0].data.push(sensorData[key].humidity);
       tempBody[1].data.push(sensorData[key].temperature);
       tempBody[2].data.push(sensorData[key].moisture);
@@ -105,7 +112,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
@@ -149,7 +156,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
@@ -190,7 +197,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
@@ -231,7 +238,7 @@ export const Historical = () => {
           description: "Range of dates",
         },
         // Maybe set the dates here?
-        // categories: []
+        categories: ( dataSource.length > 0 ? dataSource[0].dates : [] )
       },
       yAxis: {
         title: {
