@@ -281,6 +281,7 @@ export const Historical = () => {
           Showing data for the last <input value={inputQuery} onChange={e => setInputQuery(e.target.value)} /> days.
           
         </div>
+        <input type="submit"></input>
       </form>      
       <div ref={refMoisture} />
       <div ref={refHumidity} />
